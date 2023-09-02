@@ -67,7 +67,7 @@ class Vertex(object):
         elif self.round_pos[1] > (HEIGHT - radius):
             self.round_pos[1] = (HEIGHT - radius) - 1
 
-    def MoveVertex(self):
+    def MoveVertex(self, amplitude):
         self.pos[0] = self.round_pos[0] + self.radius * math.cos(self.angle)
         self.pos[1] = self.round_pos[1] + self.radius * math.sin(self.angle)
-        self.angle += self.speed
+        self.angle += self.speed * amplitude
