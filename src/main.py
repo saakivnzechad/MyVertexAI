@@ -1,29 +1,28 @@
 import pygame
 from components.vertexes import Vertex
-from random import randint
 import random
 import numpy
 from screeninfo import get_monitors
 from components.Audiolistener import MicrophoneListener
-from asyncio import Queue
 import asyncio
+import yaml
 
-proportion = 1
-isFullscreenreen = False
-isDarkTheme = True
-isDebug = True
-
+with open('config.yaml', 'r') as file:
+    config = yaml.safe_load(file)
+    print(config)
+    
 DEF_WIDTH = 960
 DEF_HEIGHT = 960
-
 FPS = 30
-WHITE = (255, 255, 255)
 VERTEX_COUNT = 32
 DEEP_DARK_FANTASIES = [-2, 8]  # ♂♂♂♂♂♂♂♂ WEE WEE ♂♂♂♂♂♂♂♂
 VERTEX_ROUND_RADIUS_RANGE = [8, 96]
 SPEED_RANGE = [-0.01, 0.01]
 MAX_NORMAL_DISTANCE = DEF_HEIGHT / 2
 LIGHT_RANGE = [0, 128]
+isFullscreenreen = False
+isDarkTheme = True
+isDebug = True
 
 for m in get_monitors():
     if isFullscreenreen is True:
@@ -42,15 +41,15 @@ async def main():
     screen.set_alpha(0)
     font = pygame.font.Font(None, 12)
 
-    queue = Queue()
+    queue = asyncio.Queue()
     listener = MicrophoneListener(queue)
     running = True
     vertexesArray = [Vertex() for _ in range(VERTEX_COUNT)]
     vertex_deep_color = 0
     
     for i in vertexesArray:
-        i.round_pos = [randint(VERTEX_ROUND_RADIUS_RANGE[1], (WIN_WIDTH - VERTEX_ROUND_RADIUS_RANGE[1])), randint(VERTEX_ROUND_RADIUS_RANGE[1], (WIN_HEIGHT - VERTEX_ROUND_RADIUS_RANGE[1])), random.uniform(DEEP_DARK_FANTASIES[0], DEEP_DARK_FANTASIES[1])]
-        i.radius = randint(VERTEX_ROUND_RADIUS_RANGE[0], VERTEX_ROUND_RADIUS_RANGE[1])
+        i.round_pos = [random.randint(VERTEX_ROUND_RADIUS_RANGE[1], (WIN_WIDTH - VERTEX_ROUND_RADIUS_RANGE[1])), random.randint(VERTEX_ROUND_RADIUS_RANGE[1], (WIN_HEIGHT - VERTEX_ROUND_RADIUS_RANGE[1])), random.uniform(DEEP_DARK_FANTASIES[0], DEEP_DARK_FANTASIES[1])]
+        i.radius = random.randint(VERTEX_ROUND_RADIUS_RANGE[0], VERTEX_ROUND_RADIUS_RANGE[1])
         if i.round_pos[2] >= 1.0:
             i.speed = random.uniform(SPEED_RANGE[0], SPEED_RANGE[1]) * i.round_pos[2]
         elif i.round_pos[2] <= -1.0:
