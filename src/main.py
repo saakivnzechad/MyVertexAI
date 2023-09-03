@@ -2,10 +2,7 @@ import pygame
 from components.vertexes import Vertex
 from random import randint
 import random
-from numpy import interp
-from numpy import median
 import numpy
-import math
 from screeninfo import get_monitors
 from components.Audiolistener import MicrophoneListener
 from asyncio import Queue
@@ -14,6 +11,7 @@ import asyncio
 proportion = 1
 isFullscreenreen = False
 isDarkTheme = True
+isDebug = True
 
 DEF_WIDTH = 800
 DEF_HEIGHT = 600
@@ -21,12 +19,12 @@ for m in get_monitors():
     if isFullscreenreen is True:
         WIN_WIDTH = m.width
         WIN_HEIGHT = m.height
-        proportion = median([(WIN_WIDTH / DEF_WIDTH), (WIN_HEIGHT / DEF_HEIGHT)])
+        proportion = numpy.median([(WIN_WIDTH / DEF_WIDTH), (WIN_HEIGHT / DEF_HEIGHT)])
     else:
         WIN_WIDTH = DEF_WIDTH
         WIN_HEIGHT = DEF_HEIGHT
 
-FPS = 60
+FPS = 30
 WHITE = (255, 255, 255)
 VERTEX_COUNT = 32
 DEEP_DARK_FANTASIES = [-2, 8]  # ♂♂♂♂♂♂♂♂ WEE WEE ♂♂♂♂♂♂♂♂
@@ -40,14 +38,17 @@ vertex_deep_color = 0
 
 async def main():
     clock = pygame.time.Clock()
+    pygame.font.init()
     window_flags = pygame.SRCALPHA | pygame.NOFRAME  # | pygame.FULLscreenREEN
     screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), window_flags)
     screen.set_alpha(0)
+    font = pygame.font.Font(None, 12)
+
     queue = Queue()
     listener = MicrophoneListener(queue)
     running = True
     vertexesArray = [Vertex() for _ in range(VERTEX_COUNT)]
-
+    
     for i in vertexesArray:
         i.round_pos = [randint(VERTEX_ROUND_RADIUS_RANGE[1], (WIN_WIDTH - VERTEX_ROUND_RADIUS_RANGE[1])), randint(VERTEX_ROUND_RADIUS_RANGE[1], (WIN_HEIGHT - VERTEX_ROUND_RADIUS_RANGE[1])), random.uniform(DEEP_DARK_FANTASIES[0], DEEP_DARK_FANTASIES[1])]
         i.radius = randint(VERTEX_ROUND_RADIUS_RANGE[0], VERTEX_ROUND_RADIUS_RANGE[1])
@@ -60,6 +61,8 @@ async def main():
         else:
             raise IndexError
     while running:
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -67,6 +70,11 @@ async def main():
             screen.fill((0, 0, 0, 0))
         else:
             screen.fill((255, 255, 255, 0))
+            
+        if isDebug is True:
+            fps = clock.get_fps()
+            fps_text = font.render(f"FPS: {str(fps)}", True, (255, 0, 0))
+            screen.blit(fps_text, (10, 10))
 
         await listener.listen()
         if not queue.empty():
@@ -74,13 +82,14 @@ async def main():
             amplitude = numpy.clip((amplitude / 100), 1, 64)
 
         for i in vertexesArray:
-            vertex_deep_color = (int(interp(i.round_pos[2], DEEP_DARK_FANTASIES, LIGHT_RANGE)))
+            vertex_deep_color = (int(numpy.interp(i.round_pos[2], DEEP_DARK_FANTASIES, LIGHT_RANGE)))
             i.color = (vertex_deep_color, vertex_deep_color, vertex_deep_color)
             i.MoveVertex(amplitude)
             i.pos = [int(i.pos[0]), int(i.pos[1])]
             point_list = find_closest_points(i, vertexesArray, MAX_NORMAL_DISTANCE, amplitude)
             if len(point_list[0]) > 1:
                 pygame.draw.aalines(screen, point_list[1], True, point_list[0], point_list[2])
+
 
         pygame.display.flip()
         clock.tick(FPS)
@@ -100,7 +109,7 @@ def find_closest_points(target_vertex, vertex_list, distance, amplitude):
         # Вычисляем расстояние между целевой точкой и текущей точкой
         dx = target_vertex.pos[0] - vertex.pos[0]
         dy = target_vertex.pos[1] - vertex.pos[1]
-        calculated_distance = math.sqrt(dx**2 + dy**2)
+        calculated_distance = numpy.sqrt(dx**2 + dy**2)
         # Если расстояние меньше заданного, добавляем точку в результаты
         if calculated_distance < distance:
             closest_vertexes.append(vertex.pos)
@@ -111,9 +120,9 @@ def find_closest_points(target_vertex, vertex_list, distance, amplitude):
     closest_objects_color.append(target_vertex.color)
     closest_objects_z.append(target_vertex.round_pos[2])
 
-    rounded_color = median(closest_objects_color)
-    rounded_size = abs(median(closest_objects_z))
-    rounded_size = (int(interp(rounded_size, DEEP_DARK_FANTASIES, [1, 2])))
+    rounded_color = numpy.median(closest_objects_color)
+    rounded_size = abs(numpy.median(closest_objects_z))
+    rounded_size = (int(numpy.interp(rounded_size, DEEP_DARK_FANTASIES, [1, 2])))
 
     rounded_color = [rounded_color, rounded_color, rounded_color]
     rounded_color[1] = numpy.clip((rounded_color[1] * (1 + amplitude / 2)), 0, 255)
@@ -125,4 +134,5 @@ def find_closest_points(target_vertex, vertex_list, distance, amplitude):
 
     return [closest_vertexes, rounded_color, rounded_size]
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
