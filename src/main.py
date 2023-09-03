@@ -7,22 +7,22 @@ from components.Audiolistener import MicrophoneListener
 import asyncio
 import yaml
 
-with open('config.yaml', 'r') as file:
+with open('src\config_visual.yaml', 'r') as file:
     config = yaml.safe_load(file)
     print(config)
     
-DEF_WIDTH = 960
-DEF_HEIGHT = 960
-FPS = 30
-VERTEX_COUNT = 32
-DEEP_DARK_FANTASIES = [-2, 8]  # ♂♂♂♂♂♂♂♂ WEE WEE ♂♂♂♂♂♂♂♂
-VERTEX_ROUND_RADIUS_RANGE = [8, 96]
-SPEED_RANGE = [-0.01, 0.01]
-MAX_NORMAL_DISTANCE = DEF_HEIGHT / 2
-LIGHT_RANGE = [0, 128]
-isFullscreenreen = False
-isDarkTheme = True
-isDebug = True
+DEF_WIDTH = config['DEF_WIDTH']
+DEF_HEIGHT = config['DEF_WIDTH']
+FPS = config['FPS']
+VERTEX_COUNT = config['VERTEX_COUNT']
+DEEP_DARK_FANTASIES = config['DEEP_DARK_FANTASIES']  # ♂♂♂♂♂♂♂♂ WEE WEE ♂♂♂♂♂♂♂♂
+VERTEX_ROUND_RADIUS_RANGE = config['VERTEX_ROUND_RADIUS_RANGE']
+SPEED_RANGE = config['SPEED_RANGE']
+MAX_NORMAL_DISTANCE = config['MAX_NORMAL_DISTANCE']
+LIGHT_RANGE = config['LIGHT_RANGE']
+isFullscreenreen = config['isFullScreen']
+isDarkTheme = config['isDarkTheme']
+isDebug = config['isDebug']
 
 for m in get_monitors():
     if isFullscreenreen is True:

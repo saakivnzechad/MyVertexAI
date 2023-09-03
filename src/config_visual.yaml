@@ -1,0 +1,31 @@
+# YAML Configuration File
+# This configuration file specifies various properties for a graphics program.
+
+# Window Settings
+DEF_WIDTH: 640                     # The default width of the window in pixels
+DEF_HEIGHT: 480                    # The default height of the window in pixels
+FPS: 30                            # The frames per second for the program to run
+
+# Graphical Details
+VERTEX_COUNT: 32                   # A range of amount  of the vertices in space
+DEEP_DARK_FANTASIES: [-2, 8]       # Range for deep dark fantasies (a humorous variable name suggesting the Z-axis in space). The name is a joking term referring to gachimuchi
+VERTEX_ROUND_RADIUS_RANGE: [8, 96] # The range of random radii within which the normals rotate
+SPEED_RANGE: [-0.01, 0.01]         # The range of random speeds at which the vertices move and rotate
+MAX_NORMAL_DISTANCE: 240           # The maximum distance at which normals are formed between vertices
+LIGHT_RANGE: [0, 128]              # The range of brightness for the normals in the RGB color system
+
+# Program Options
+isFullScreen: False                # Sets whether the program runs in fullscreen mode or not
+isDarkTheme: True                  # Sets whether the program uses a dark theme or not
+isDebug: True                      # Sets whether the program runs in debug mode or not
+
+# Additional Comments:
+# - DEEP_DARK_FANTASIES: The name is chosen humorously and represents the Z-axis in three-dimensional space.
+# - DEF_WIDTH and DEF_HEIGHT: These variables represent the default window resolution.
+# - LIGHT_RANGE: Specifies the default range of brightness for the normals in the RGB color system.
+# - MAX_NORMAL_DISTANCE: Defines the maximum distance between vertices at which normals are formed.
+# - SPEED_RANGE: Represents the range of random speeds at which the vertices move and rotate during the animation.
+# - VERTEX_ROUND_RADIUS_RANGE: Specifies the range of random radii within which the vertices rotate around
+# - isFullScreen: Determines whether the program runs in fullscreen mode or not.
+# - isDarkTheme: Indicates whether the program uses a dark theme or not; True if it is a dark theme, False otherwise.
+# - isDebug: Sets whether the program runs in debug mode or not, True if it is running in debug mode.
