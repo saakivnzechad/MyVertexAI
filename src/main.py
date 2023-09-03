@@ -13,16 +13,8 @@ isFullscreenreen = False
 isDarkTheme = True
 isDebug = True
 
-DEF_WIDTH = 800
-DEF_HEIGHT = 600
-for m in get_monitors():
-    if isFullscreenreen is True:
-        WIN_WIDTH = m.width
-        WIN_HEIGHT = m.height
-        proportion = numpy.median([(WIN_WIDTH / DEF_WIDTH), (WIN_HEIGHT / DEF_HEIGHT)])
-    else:
-        WIN_WIDTH = DEF_WIDTH
-        WIN_HEIGHT = DEF_HEIGHT
+DEF_WIDTH = 960
+DEF_HEIGHT = 960
 
 FPS = 30
 WHITE = (255, 255, 255)
@@ -33,8 +25,14 @@ SPEED_RANGE = [-0.01, 0.01]
 MAX_NORMAL_DISTANCE = DEF_HEIGHT / 2
 LIGHT_RANGE = [0, 128]
 
-
-vertex_deep_color = 0
+for m in get_monitors():
+    if isFullscreenreen is True:
+        WIN_WIDTH = m.width
+        WIN_HEIGHT = m.height
+        proportion = numpy.median([(WIN_WIDTH / DEF_WIDTH), (WIN_HEIGHT / DEF_HEIGHT)])
+    else:
+        WIN_WIDTH = DEF_WIDTH
+        WIN_HEIGHT = DEF_HEIGHT
 
 async def main():
     clock = pygame.time.Clock()
@@ -48,6 +46,7 @@ async def main():
     listener = MicrophoneListener(queue)
     running = True
     vertexesArray = [Vertex() for _ in range(VERTEX_COUNT)]
+    vertex_deep_color = 0
     
     for i in vertexesArray:
         i.round_pos = [randint(VERTEX_ROUND_RADIUS_RANGE[1], (WIN_WIDTH - VERTEX_ROUND_RADIUS_RANGE[1])), randint(VERTEX_ROUND_RADIUS_RANGE[1], (WIN_HEIGHT - VERTEX_ROUND_RADIUS_RANGE[1])), random.uniform(DEEP_DARK_FANTASIES[0], DEEP_DARK_FANTASIES[1])]
@@ -70,11 +69,6 @@ async def main():
             screen.fill((0, 0, 0, 0))
         else:
             screen.fill((255, 255, 255, 0))
-            
-        if isDebug is True:
-            fps = clock.get_fps()
-            fps_text = font.render(f"FPS: {str(fps)}", True, (255, 0, 0))
-            screen.blit(fps_text, (10, 10))
 
         await listener.listen()
         if not queue.empty():
@@ -89,6 +83,13 @@ async def main():
             point_list = find_closest_points(i, vertexesArray, MAX_NORMAL_DISTANCE, amplitude)
             if len(point_list[0]) > 1:
                 pygame.draw.aalines(screen, point_list[1], True, point_list[0], point_list[2])
+
+        if isDebug is True:
+            fps = numpy.round(clock.get_fps(), 2)
+            fps_text = font.render(f"FPS: {str(fps)}", True, (255, 0, 0))
+            screen.blit(fps_text, (10, 10))
+            amplitude_text = font.render(f"Amp: {str(numpy.round(amplitude, 3))}", True, (255, 120, 0))
+            screen.blit(amplitude_text, (10, 20))
 
 
         pygame.display.flip()
