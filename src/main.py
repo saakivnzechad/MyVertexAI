@@ -1,5 +1,5 @@
 import pygame
-from vertexes import Vertex
+from components.vertexes import Vertex
 from random import randint
 import random
 from numpy import interp
@@ -7,7 +7,7 @@ from numpy import median
 import numpy
 import math
 from screeninfo import get_monitors
-import Audiolistener
+from components.Audiolistener import MicrophoneListener
 from asyncio import Queue
 import asyncio
 
@@ -44,7 +44,7 @@ async def main():
     screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), window_flags)
     screen.set_alpha(0)
     queue = Queue()
-    listener = Audiolistener.MicrophoneListener(queue)
+    listener = MicrophoneListener(queue)
     running = True
     vertexesArray = [Vertex() for _ in range(VERTEX_COUNT)]
 
