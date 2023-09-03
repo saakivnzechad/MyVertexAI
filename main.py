@@ -30,7 +30,7 @@ FPS = 60
 WHITE = (255, 255, 255)
 VERTEX_COUNT = 32
 DEEP_DARK_FANTASIES = [-2, 8]  # ♂♂♂♂♂♂♂♂ WEE WEE ♂♂♂♂♂♂♂♂
-VERTEX_ROUND_RADIUS_RANGE = [4, 64]
+VERTEX_ROUND_RADIUS_RANGE = [8, 96]
 SPEED_RANGE = [-0.01, 0.01]
 MAX_NORMAL_DISTANCE = DEF_HEIGHT / 2
 LIGHT_RANGE = [0, 128]
@@ -72,7 +72,6 @@ async def main():
         if not queue.empty():
             amplitude = await queue.get()
             amplitude = numpy.clip((amplitude / 100), 1, 64)
-            print(amplitude)
 
         for i in vertexesArray:
             vertex_deep_color = (int(interp(i.round_pos[2], DEEP_DARK_FANTASIES, LIGHT_RANGE)))
